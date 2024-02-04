@@ -1,20 +1,18 @@
 import NextLink from 'next/link';
 import { usePathname } from 'next/navigation';
 import PropTypes from 'prop-types';
-import ArrowTopRightOnSquareIcon from '@heroicons/react/24/solid/ArrowTopRightOnSquareIcon';
-import ChevronUpDownIcon from '@heroicons/react/24/solid/ChevronUpDownIcon';
+import FaviconImage from '../../components/Favicon';
+import LogoSvg  from '../../assets/logo.svg';
+
 import {
   Box,
   Button,
   Divider,
   Drawer,
   Stack,
-  SvgIcon,
   Typography,
   useMediaQuery
 } from '@mui/material';
-import { Logo } from 'src/components/logo';
-import { Scrollbar } from 'src/components/scrollbar';
 import { items } from './config';
 import { SideNavItem } from './side-nav-item';
 
@@ -24,17 +22,8 @@ export const SideNav = (props) => {
   const lgUp = useMediaQuery((theme) => theme.breakpoints.up('lg'));
 
   const content = (
-    <Scrollbar
-      sx={{
-        height: '100%',
-        '& .simplebar-content': {
-          height: '100%'
-        },
-        '& .simplebar-scrollbar:before': {
-          background: 'neutral.400'
-        }
-      }}
-    >
+    
+    
       <Box
         sx={{
           display: 'flex',
@@ -43,17 +32,7 @@ export const SideNav = (props) => {
         }}
       >
         <Box sx={{ p: 3 }}>
-          <Box
-            component={NextLink}
-            href="/"
-            sx={{
-              display: 'inline-flex',
-              height: 32,
-              width: 32
-            }}
-          >
-            <Logo />
-          </Box>
+          
           <Box
             sx={{
               alignItems: 'center',
@@ -66,28 +45,18 @@ export const SideNav = (props) => {
               p: '12px'
             }}
           >
-            <div>
-              <Typography
-                color="inherit"
-                variant="subtitle1"
-              >
-                Devias
-              </Typography>
-              <Typography
-                color="neutral.400"
-                variant="body2"
-              >
-                Production
-              </Typography>
-            </div>
-            <SvgIcon
-              fontSize="small"
-              sx={{ color: 'neutral.500' }}
-            >
-              <ChevronUpDownIcon />
-            </SvgIcon>
-          </Box>
-        </Box>
+            <Box sx={{ display: 'flex', alignItems: 'center' }}>
+            <LogoSvg width="32px" height="32px" />
+      <Typography
+        color="inherit"
+        variant="subtitle1" 
+        sx={{ marginLeft: '8px' }}
+      >
+        MasterMenu
+      </Typography>
+    </Box>
+  </Box>
+</Box>
         <Divider sx={{ borderColor: 'neutral.700' }} />
         <Box
           component="nav"
@@ -130,52 +99,9 @@ export const SideNav = (props) => {
             py: 3
           }}
         >
-          <Typography
-            color="neutral.100"
-            variant="subtitle2"
-          >
-            Need more features?
-          </Typography>
-          <Typography
-            color="neutral.500"
-            variant="body2"
-          >
-            Check out our Pro solution template.
-          </Typography>
-          <Box
-            sx={{
-              display: 'flex',
-              mt: 2,
-              mx: 'auto',
-              width: '160px',
-              '& img': {
-                width: '100%'
-              }
-            }}
-          >
-            <img
-              alt="Go to pro"
-              src="/assets/devias-kit-pro.png"
-            />
-          </Box>
-          <Button
-            component="a"
-            endIcon={(
-              <SvgIcon fontSize="small">
-                <ArrowTopRightOnSquareIcon />
-              </SvgIcon>
-            )}
-            fullWidth
-            href="https://material-kit-pro-react.devias.io/"
-            sx={{ mt: 2 }}
-            target="_blank"
-            variant="contained"
-          >
-            Pro Live Preview
-          </Button>
         </Box>
       </Box>
-    </Scrollbar>
+    
   );
 
   if (lgUp) {

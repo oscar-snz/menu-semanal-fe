@@ -7,7 +7,7 @@ const Page = () => (
   
     <Head>
       <title>
-        Inicio | MasterMenu
+        MasterMenu | Planificador de Menu
       </title>
     </Head>
 );   

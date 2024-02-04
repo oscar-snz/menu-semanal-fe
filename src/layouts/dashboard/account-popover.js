@@ -42,7 +42,7 @@ export const AccountPopover = (props) => {
           color="text.secondary"
           variant="body2"
         >
-          Anika Visser
+          Oscar Sanchez
         </Typography>
       </Box>
       <Divider />

@@ -1,35 +1,37 @@
-import ChartBarIcon from '@heroicons/react/24/solid/ChartBarIcon';
+import HomeIcon from '@heroicons/react/24/solid/HomeIcon';
 import CogIcon from '@heroicons/react/24/solid/CogIcon';
-import LockClosedIcon from '@heroicons/react/24/solid/LockClosedIcon';
+import CalendarIcon from '@heroicons/react/24/solid/CalendarIcon'
+import ArchiveBoxIcon from '@heroicons/react/24/solid/ArchiveBoxIcon';
 import ShoppingBagIcon from '@heroicons/react/24/solid/ShoppingBagIcon';
 import UserIcon from '@heroicons/react/24/solid/UserIcon';
-import UserPlusIcon from '@heroicons/react/24/solid/UserPlusIcon';
-import UsersIcon from '@heroicons/react/24/solid/UsersIcon';
-import XCircleIcon from '@heroicons/react/24/solid/XCircleIcon';
+import UserGroupIcon from '@heroicons/react/24/solid/UserGroupIcon';
+import ClipboardIcon from '@heroicons/react/24/solid/ClipboardIcon';
+
 import { SvgIcon } from '@mui/material';
+
 
 export const items = [
   {
-    title: 'Overview',
+    title: 'Menu del Dia',
     path: '/',
     icon: (
       <SvgIcon fontSize="small">
-        <ChartBarIcon />
+        <HomeIcon />
       </SvgIcon>
     )
   },
   {
-    title: 'Customers',
-    path: '/customers',
+    title: 'Inventario',
+    path: '/stock',
     icon: (
       <SvgIcon fontSize="small">
-        <UsersIcon />
+        <ArchiveBoxIcon />
       </SvgIcon>
     )
   },
   {
-    title: 'Companies',
-    path: '/companies',
+    title: 'Lista de compras',
+    path: '/shoppingList',
     icon: (
       <SvgIcon fontSize="small">
         <ShoppingBagIcon />
@@ -37,7 +39,25 @@ export const items = [
     )
   },
   {
-    title: 'Account',
+    title: 'Planificador de menu',
+    path: '/menuPlanner',
+    icon: (
+      <SvgIcon fontSize="small">
+        <CalendarIcon />
+      </SvgIcon>
+    )
+  },
+  {
+    title: 'Gestionar familia',
+    path: '/family',
+    icon: (
+      <SvgIcon fontSize="small">
+        <UserGroupIcon />
+      </SvgIcon>
+    )
+  },
+  {
+    title: 'Perfil',
     path: '/account',
     icon: (
       <SvgIcon fontSize="small">
@@ -46,7 +66,7 @@ export const items = [
     )
   },
   {
-    title: 'Settings',
+    title: 'Ajustes',
     path: '/settings',
     icon: (
       <SvgIcon fontSize="small">
@@ -55,30 +75,19 @@ export const items = [
     )
   },
   {
-    title: 'Login',
-    path: '/auth/login',
-    icon: (
-      <SvgIcon fontSize="small">
-        <LockClosedIcon />
-      </SvgIcon>
-    )
-  },
-  {
-    title: 'Register',
-    path: '/auth/register',
-    icon: (
-      <SvgIcon fontSize="small">
-        <UserPlusIcon />
-      </SvgIcon>
-    )
-  },
-  {
-    title: 'Error',
+    title: (
+      <>
+        <span>Creador de recetas</span>
+        <br />
+        <span>(Próximamente)</span>
+      </>
+    ),
     path: '/404',
     icon: (
       <SvgIcon fontSize="small">
-        <XCircleIcon />
+        <ClipboardIcon />
       </SvgIcon>
     )
   }
+
 ];

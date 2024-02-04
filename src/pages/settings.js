@@ -8,7 +8,7 @@ const Page = () => (
   <>
     <Head>
       <title>
-        Settings | Devias Kit
+        Ajustes | MasterMenu
       </title>
     </Head>
     <Box
