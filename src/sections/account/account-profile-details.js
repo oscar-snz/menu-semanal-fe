@@ -36,10 +36,10 @@ export const AccountProfileDetails = () => {
   const { user } = useAuth(); // Extrae el usuario del contexto de autenticación
 
   const [values, setValues] = useState({
-    name: user.name,
-    email: user.email,
-    phone: user.phone || '',
-    country: user.country || ''
+    name: user?.name,
+    email: user?.email,
+    phone: user?.phone || '',
+    country: user?.country || ''
   });
 
   const handleChange = useCallback(
