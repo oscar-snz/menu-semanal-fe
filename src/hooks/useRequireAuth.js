@@ -17,7 +17,6 @@ export const useRequireAuth = (redirectUrl = '/auth/login') => {
       router.push(redirectUrl);
     }else{
         axios.defaults.headers.common['Authorization'] = `Bearer ${token}`;
-        console.log('Token extraido del localstorage: ',token)
     }
 }
   }, [router, redirectUrl]);

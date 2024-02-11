@@ -114,7 +114,6 @@ export const AuthProvider = (props) => {
   };
 
   const signIn = async (email, password) => {
-    console.log("entrando a sign in");
     try{
     const response = await axios.post('http://localhost:3001/api/auth/login', {
       email,
@@ -148,9 +147,12 @@ export const AuthProvider = (props) => {
       password,
     });
   
-  const { user } = response.data;
-
-  window.sessionStorage.setItem('authenticated', 'true');
+  const { user, token } = response.data; // Asume que el backend envía el token y los datos del usuario
+  if (typeof window !== "undefined") {
+    localStorage.setItem('token', token); // Almacena el token en localStorage
+    localStorage.setItem('user', JSON.stringify(user)); // Almacena los datos del usuario en localStorage
+    window.sessionStorage.setItem('authenticated', 'true'); // Marca la sesión como autenticada
+  }
 
   dispatch({
     type: HANDLERS.SIGN_IN,
