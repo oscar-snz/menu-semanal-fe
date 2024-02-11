@@ -1,4 +1,6 @@
-import { useCallback, useState } from 'react';
+import React, { useCallback, useState } from 'react';
+import { useAuth } from 'src/hooks/use-auth'; 
+
 import {
   Box,
   Button,
@@ -11,33 +13,33 @@ import {
   Unstable_Grid2 as Grid
 } from '@mui/material';
 
-const states = [
+const countries = [
   {
-    value: 'alabama',
-    label: 'Alabama'
+    value: 'honduras',
+    label: 'Honduras'
   },
   {
-    value: 'new-york',
-    label: 'New York'
+    value: 'estados unidos',
+    label: 'USA'
   },
   {
-    value: 'san-francisco',
-    label: 'San Francisco'
+    value: 'mexico',
+    label: 'Mexico'
   },
   {
-    value: 'los-angeles',
-    label: 'Los Angeles'
+    value: 'el salvador',
+    label: 'El Salvador'
   }
 ];
 
 export const AccountProfileDetails = () => {
+  const { user } = useAuth(); // Extrae el usuario del contexto de autenticación
+
   const [values, setValues] = useState({
-    firstName: 'Anika',
-    lastName: 'Visser',
-    email: 'demo@devias.io',
-    phone: '',
-    state: 'los-angeles',
-    country: 'USA'
+    name: user.name,
+    email: user.email,
+    phone: user.phone || '',
+    country: user.country || ''
   });
 
   const handleChange = useCallback(
@@ -65,7 +67,7 @@ export const AccountProfileDetails = () => {
     >
       <Card>
         <CardHeader
-          subheader="The information can be edited"
+          subheader="La informacion puede ser editada"
           title="Profile"
         />
         <CardContent sx={{ pt: 0 }}>
@@ -80,38 +82,26 @@ export const AccountProfileDetails = () => {
               >
                 <TextField
                   fullWidth
-                  helperText="Please specify the first name"
-                  label="First name"
-                  name="firstName"
+                  helperText="Por favor indique su nombre."
+                  label="Name"
+                  name="name"
                   onChange={handleChange}
                   required
-                  value={values.firstName}
+                  value={values.name}
                 />
               </Grid>
               <Grid
                 xs={12}
                 md={6}
               >
-                <TextField
-                  fullWidth
-                  label="Last name"
-                  name="lastName"
-                  onChange={handleChange}
-                  required
-                  value={values.lastName}
-                />
-              </Grid>
-              <Grid
-                xs={12}
-                md={6}
-              >
-                <TextField
+               <TextField
                   fullWidth
                   label="Email Address"
                   name="email"
                   onChange={handleChange}
                   required
-                  value={values.email}
+                 value={values.email}
+                 
                 />
               </Grid>
               <Grid
@@ -120,41 +110,18 @@ export const AccountProfileDetails = () => {
               >
                 <TextField
                   fullWidth
-                  label="Phone Number"
-                  name="phone"
-                  onChange={handleChange}
-                  type="number"
-                  value={values.phone}
-                />
-              </Grid>
-              <Grid
-                xs={12}
-                md={6}
-              >
-                <TextField
-                  fullWidth
-                  label="Country"
+                  label="Seleccione Pais"
                   name="country"
-                  onChange={handleChange}
-                  required
-                  value={values.country}
-                />
-              </Grid>
-              <Grid
-                xs={12}
-                md={6}
-              >
-                <TextField
-                  fullWidth
-                  label="Select State"
-                  name="state"
                   onChange={handleChange}
                   required
                   select
                   SelectProps={{ native: true }}
-                  value={values.state}
+                  value={values.country}
+                  InputLabelProps={{
+                    shrink: true
+                  }}
                 >
-                  {states.map((option) => (
+                  {countries.map((option) => (
                     <option
                       key={option.value}
                       value={option.value}
@@ -164,6 +131,20 @@ export const AccountProfileDetails = () => {
                   ))}
                 </TextField>
               </Grid>
+              <Grid
+                xs={12}
+                md={6}
+              >
+                <TextField
+                  fullWidth
+                  label="Numero de telefono"
+                  name="phone"
+                  onChange={handleChange}
+                  type="number"
+                  value={values.phone}
+                />
+              </Grid>
+                            
             </Grid>
           </Box>
         </CardContent>

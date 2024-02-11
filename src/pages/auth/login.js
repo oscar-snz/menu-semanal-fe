@@ -1,8 +1,11 @@
 import Head from 'next/head';
 import NextLink from 'next/link';
 import { useRouter } from 'next/navigation';
+import { Snackbar, Alert } from '@mui/material';
 import { useFormik } from 'formik';
 import * as Yup from 'yup';
+import React, { useState } from 'react'
+
 import {
   Box,
   Button,
@@ -15,12 +18,14 @@ import { useAuth } from 'src/hooks/use-auth';
 import { Layout as AuthLayout } from 'src/layouts/auth/layout';
 
 const Page = () => {
+  const [loginFailed, setLoginFailure] = useState(false);
+
   const router = useRouter();
   const auth = useAuth();
   const formik = useFormik({
     initialValues: {
-      email: 'demo@devias.io',
-      password: 'Password123!',
+      email: '',
+      password: '',
       submit: null
     },
     validationSchema: Yup.object({
@@ -34,14 +39,16 @@ const Page = () => {
         .max(255)
         .required('Password is required')
     }),
-    onSubmit: async (values, helpers) => {
+    onSubmit: async (values) => {
       try {
         await auth.signIn(values.email, values.password);
         router.push('/');
       } catch (err) {
-        helpers.setStatus({ success: false });
-        helpers.setErrors({ submit: err.message });
-        helpers.setSubmitting(false);
+        setLoginFailure(true);
+        const errorMessage = err.response?.data?.message || 'El correo electronico o contraseña son incorrectos';
+        setSubmitting(false);
+        setErrors({ submit: errorMessage });
+        setOpenSnackbar(true);
       }
     }
   });
@@ -54,6 +61,11 @@ const Page = () => {
           Login | Devias Kit
         </title>
       </Head>
+      <Snackbar open={loginFailed} autoHideDuration={6000} onClose={() => setLoginFailure(false)}>
+      <Alert onClose={() => setLoginFailure(false)} severity="error">
+        Inicio de sesión fallido. Por favor, verifica tus credenciales.
+      </Alert>
+    </Snackbar>
       <Box
         sx={{
           backgroundColor: 'background.paper',

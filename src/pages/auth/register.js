@@ -1,45 +1,60 @@
 import Head from 'next/head';
 import NextLink from 'next/link';
 import { useRouter } from 'next/navigation';
-import { useFormik } from 'formik';
+import { useFormik} from 'formik';
 import * as Yup from 'yup';
-import { Box, Button, Link, Stack, TextField, Typography } from '@mui/material';
+import { Button, TextField, Snackbar, Alert, Typography, Box, Stack, Link } from '@mui/material';
 import { useAuth } from 'src/hooks/use-auth';
 import { Layout as AuthLayout } from 'src/layouts/auth/layout';
+import React, { useState } from 'react'
 
 const Page = () => {
+  const [openSnackbar, setOpenSnackbar] = useState(false);
+  const [snackbarMessage, setSnackbarMessage] = useState('');
+  const [registrationSuccess, setRegistrationSuccess] = useState(false);
   const router = useRouter();
-  const auth = useAuth();
+  const { signUp } = useAuth();
   const formik = useFormik({
     initialValues: {
-      email: '',
       name: '',
+      email: '',
       password: '',
+      confirmPassword: '',
       submit: null
     },
     validationSchema: Yup.object({
+      name: Yup
+      .string()
+      .max(50, 'El nombre no puede exeder los 50 caracteres')
+      .required('El nombre es requerido'),
       email: Yup
         .string()
-        .email('Must be a valid email')
+        .email('Debe ser un correo válido')
         .max(255)
-        .required('Email is required'),
-      name: Yup
-        .string()
-        .max(255)
-        .required('Name is required'),
+        .required('El correo es requerido'),
       password: Yup
         .string()
+        .min(6, 'La contraseña debe tener al menos 6 caracteres')
         .max(255)
-        .required('Password is required')
+        .required('La contraseña es requerida'),
+        confirmPassword: Yup
+        .string()
+        .oneOf([Yup.ref('password'), null], 'Las contraseñas deben coincidir')
+        .required('La confirmación de contraseña es requerida'),
     }),
-    onSubmit: async (values, helpers) => {
+    onSubmit: async (values, {setSubmitting, setErrors}) => {
       try {
-        await auth.signUp(values.email, values.name, values.password);
-        router.push('/');
+        await signUp(values.name, values.email, values.password);
+        setRegistrationSuccess(true); // Simula un registro exitoso
+        setOpenSnackbar(true); // Muestra el Snackbar
+        setSnackbarMessage('Registro exitoso. Redirigiendo...'); // Mensaje de éxito
+        setTimeout(() => router.push('/'), 3000); // Redirige después de 3 segundos
       } catch (err) {
-        helpers.setStatus({ success: false });
-        helpers.setErrors({ submit: err.message });
-        helpers.setSubmitting(false);
+        const errorMessage = err.response?.data?.message || 'Error al registrar el usuario.';
+        setSubmitting(false);
+        setErrors({ submit: errorMessage });
+        setSnackbarMessage(errorMessage);
+        setOpenSnackbar(true);
       }
     }
   });
@@ -48,10 +63,16 @@ const Page = () => {
     <>
       <Head>
         <title>
-          Register | Devias Kit
+          Register | MasterMenu
         </title>
       </Head>
+      <Snackbar open={openSnackbar} autoHideDuration={6000} onClose={() => setOpenSnackbar(false)}>
+        <Alert onClose={() => setOpenSnackbar(false)} severity={registrationSuccess ? "success" : "error"} sx={{ width: '100%' }}>
+          {snackbarMessage}
+        </Alert>
+      </Snackbar>
       <Box
+      
         sx={{
           flex: '1 1 auto',
           alignItems: 'center',
@@ -91,6 +112,7 @@ const Page = () => {
                 </Link>
               </Typography>
             </Stack>
+             
             <form
               noValidate
               onSubmit={formik.handleSubmit}
@@ -127,7 +149,20 @@ const Page = () => {
                   onChange={formik.handleChange}
                   type="password"
                   value={formik.values.password}
+                  autoComplete='current-password'
                 />
+                <TextField
+                error={!!(formik.touched.confirmPassword && formik.errors.confirmPassword)}
+                fullWidth
+                helperText={formik.touched.confirmPassword && formik.errors.confirmPassword}
+                label="Confirmar contraseña"
+                name="confirmPassword"
+                onBlur={formik.handleBlur}
+                onChange={formik.handleChange}
+                type="password"
+                value={formik.values.confirmPassword}
+                autoComplete="new-password"
+              />
               </Stack>
               {formik.errors.submit && (
                 <Typography
@@ -139,16 +174,21 @@ const Page = () => {
                 </Typography>
               )}
               <Button
-                fullWidth
-                size="large"
-                sx={{ mt: 3 }}
-                type="submit"
-                variant="contained"
-              >
-                Continue
-              </Button>
+              fullWidth
+              size="large"
+              sx={{ mt: 3 }}
+              type="submit"
+              variant="contained"
+              disabled={!formik.isValid || formik.isSubmitting}
+            >
+              Registrar
+            </Button>
             </form>
+              
+    
+            
           </div>
+          
         </Box>
       </Box>
     </>

@@ -1,3 +1,6 @@
+import React from 'react';
+import { useAuth } from 'src/hooks/use-auth';
+
 import {
   Avatar,
   Box,
@@ -9,16 +12,14 @@ import {
   Typography
 } from '@mui/material';
 
-const user = {
-  avatar: '/assets/avatars/avatar-anika-visser.png',
-  city: 'Los Angeles',
-  country: 'USA',
-  jobTitle: 'Senior Developer',
-  name: 'Oscar Sanchez',
+const defaultUser = {
+  avatar: '/assets/avatars/avatar-marcus-finn.png',
   timezone: 'GTM-7'
 };
 
-export const AccountProfile = () => (
+export const AccountProfile = () => {
+  const { user } = useAuth(); // Extrae el usuario del contexto de autenticación
+  return (
   <Card>
     <CardContent>
       <Box
@@ -29,7 +30,7 @@ export const AccountProfile = () => (
         }}
       >
         <Avatar
-          src={user.avatar}
+          src={defaultUser.avatar}
           sx={{
             height: 80,
             mb: 2,
@@ -46,13 +47,7 @@ export const AccountProfile = () => (
           color="text.secondary"
           variant="body2"
         >
-          {user.city} {user.country}
-        </Typography>
-        <Typography
-          color="text.secondary"
-          variant="body2"
-        >
-          {user.timezone}
+          {defaultUser.timezone}
         </Typography>
       </Box>
     </CardContent>
@@ -62,8 +57,9 @@ export const AccountProfile = () => (
         fullWidth
         variant="text"
       >
-        Upload picture
+        Subir foto
       </Button>
     </CardActions>
   </Card>
 );
+        };

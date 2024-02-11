@@ -1,5 +1,6 @@
-import { createContext, useContext, useEffect, useReducer, useRef } from 'react';
+import { createContext, useContext, useState, useEffect, useReducer, useRef } from 'react';
 import PropTypes from 'prop-types';
+import axios from 'axios'; 
 
 const HANDLERS = {
   INITIALIZE: 'INITIALIZE',
@@ -65,39 +66,24 @@ export const AuthProvider = (props) => {
   const initialized = useRef(false);
 
   const initialize = async () => {
-    // Prevent from calling twice in development mode with React.StrictMode enabled
     if (initialized.current) {
       return;
     }
-
+  
     initialized.current = true;
-
-    let isAuthenticated = false;
-
-    try {
-      isAuthenticated = window.sessionStorage.getItem('authenticated') === 'true';
-    } catch (err) {
-      console.error(err);
-    }
-
-    if (isAuthenticated) {
-      const user = {
-        id: '5e86809283e28b96d2d38537',
-        avatar: '/assets/avatars/avatar-anika-visser.png',
-        name: 'Anika Visser',
-        email: 'anika.visser@devias.io'
-      };
-
-      dispatch({
-        type: HANDLERS.INITIALIZE,
-        payload: user
-      });
+    if (typeof window !== "undefined") {
+    const storedUser = localStorage.getItem('user');
+    const user = storedUser ? JSON.parse(storedUser) : null; // Convierte la cadena JSON almacenada de nuevo en un objeto
+    window.sessionStorage.setItem('authenticated', 'true');
+    if (user) {
+      dispatch({ type: HANDLERS.INITIALIZE, payload: user });
     } else {
-      dispatch({
-        type: HANDLERS.INITIALIZE
-      });
+      dispatch({ type: HANDLERS.INITIALIZE });
+    }
     }
   };
+   
+
 
   useEffect(
     () => {
@@ -128,31 +114,52 @@ export const AuthProvider = (props) => {
   };
 
   const signIn = async (email, password) => {
-    if (email !== 'demo@devias.io' || password !== 'Password123!') {
-      throw new Error('Please check your email and password');
+    console.log("entrando a sign in");
+    try{
+    const response = await axios.post('http://localhost:3001/api/auth/login', {
+      email,
+      password,
+    }, {
+      withCredentials: true
     }
-
-    try {
-      window.sessionStorage.setItem('authenticated', 'true');
-    } catch (err) {
-      console.error(err);
-    }
-
-    const user = {
-      id: '5e86809283e28b96d2d38537',
-      avatar: '/assets/avatars/avatar-anika-visser.png',
-      name: 'Anika Visser',
-      email: 'anika.visser@devias.io'
-    };
-
-    dispatch({
-      type: HANDLERS.SIGN_IN,
-      payload: user
-    });
+    );
+    const {user, token} = response.data;
+    if (typeof window !== "undefined") {
+      localStorage.setItem('token', token);
+      localStorage.setItem('user', JSON.stringify(user)); // Almacena los datos del usuario como una cadena JSON
+      dispatch({
+        type: HANDLERS.SIGN_IN,
+        payload: user
+      });
+      }   
+  
+  }catch(err){
+    console.error('Error en signIn: ', err);
+    console.error(err);
+    throw err;
   };
+}
 
-  const signUp = async (email, name, password) => {
-    throw new Error('Sign up is not implemented');
+  const signUp = async (name, email, password) => {
+    try {
+    const response = await axios.post('http://localhost:3001/api/users/register', {
+      name,
+      email,
+      password,
+    });
+  
+  const { user } = response.data;
+
+  window.sessionStorage.setItem('authenticated', 'true');
+
+  dispatch({
+    type: HANDLERS.SIGN_IN,
+    payload: user,
+  });
+  } catch (err) {
+  console.error(err);
+  throw err; // Para poder manejar este error en el componente
+  }
   };
 
   const signOut = () => {
@@ -160,7 +167,11 @@ export const AuthProvider = (props) => {
       type: HANDLERS.SIGN_OUT
     });
   };
-
+  if (typeof window !== "undefined") {
+  localStorage.removeItem('token');
+  localStorage.removeItem('user');
+  window.sessionStorage.setItem('authenticated', 'false');
+  }
   return (
     <AuthContext.Provider
       value={{
