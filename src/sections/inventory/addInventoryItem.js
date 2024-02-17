@@ -3,12 +3,20 @@ import { Button, Box, Select, MenuItem, FormControl, InputLabel, TextField } fro
 import { useFormik } from 'formik';
 import * as Yup from 'yup';
 import axios from 'axios';
+import { useAuth } from 'src/hooks/use-auth';
+
 
 const AddInventoryItem = ({ editingItem, setEditingItem, fetchInventoryItems }) => {
   // Estados para tipos de alimentos y unidades predeterminadas
   const [foodTypes, setFoodTypes] = React.useState([]);
   const [units, setUnits] = React.useState([]);
+  const { token } = useAuth();
 
+  const config = {
+    headers: {
+      'Authorization': `Bearer ${token}`
+    }
+  };
   // Carga inicial de tipos de alimentos
   useEffect(() => {
     const fetchFoodTypes = async () => {
@@ -45,9 +53,9 @@ const AddInventoryItem = ({ editingItem, setEditingItem, fetchInventoryItems }) 
 
       try {
         if (editingItem) {
-          await axios.put(`http://localhost:3001/api/inventario/${editingItem._id}`, itemData);
+          await axios.put(`http://localhost:3001/api/inventario/modify/${editingItem._id}`, itemData, config);
         } else {
-          await axios.post('http://localhost:3001/api/inventario', itemData);
+          await axios.post('http://localhost:3001/api/inventario/agregar', itemData, config);
         }
         fetchInventoryItems(); // Recargar inventario
         setEditingItem(null); // Finalizar edición
@@ -56,6 +64,7 @@ const AddInventoryItem = ({ editingItem, setEditingItem, fetchInventoryItems }) 
         console.error('Error al guardar el elemento del inventario:', error);
       }
     },
+    enableReinitialize: true,
   });
 
   // Cargar unidades predeterminadas basadas en el tipo de alimento seleccionado
