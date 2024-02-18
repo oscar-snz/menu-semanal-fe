@@ -64,6 +64,9 @@ export const AuthProvider = (props) => {
   const { children } = props;
   const [state, dispatch] = useReducer(reducer, initialState);
   const initialized = useRef(false);
+  const [currentUser, setCurrentUser] = useState(null);
+  const [token, setToken] = useState("");
+  
 
   const initialize = async () => {
     if (initialized.current) {
@@ -72,14 +75,18 @@ export const AuthProvider = (props) => {
   
     initialized.current = true;
     if (typeof window !== "undefined") {
-    const storedUser = localStorage.getItem('user');
-    const user = storedUser ? JSON.parse(storedUser) : null; // Convierte la cadena JSON almacenada de nuevo en un objeto
-    window.sessionStorage.setItem('authenticated', 'true');
-    if (user) {
-      dispatch({ type: HANDLERS.INITIALIZE, payload: user });
-    } else {
-      dispatch({ type: HANDLERS.INITIALIZE });
-    }
+      const storedToken = localStorage.getItem('token');
+      const storedUser = localStorage.getItem('user');
+      const user = storedUser ? JSON.parse(storedUser) : null;
+
+      if (user && storedToken) {
+        setCurrentUser(user);
+        setToken(storedToken);
+        dispatch({ type: HANDLERS.INITIALIZE, payload: user });
+        // window.sessionStorage.setItem('authenticated', 'true'); // Considera si esto es necesario
+      } else {
+        dispatch({ type: HANDLERS.INITIALIZE });
+      }
     }
   };
    
@@ -93,25 +100,25 @@ export const AuthProvider = (props) => {
     []
   );
 
-  const skip = () => {
-    try {
-      window.sessionStorage.setItem('authenticated', 'true');
-    } catch (err) {
-      console.error(err);
-    }
+  // const skip = () => {
+  //   try {
+  //     window.sessionStorage.setItem('authenticated', 'true');
+  //   } catch (err) {
+  //     console.error(err);
+  //   }
 
-    const user = {
-      id: '5e86809283e28b96d2d38537',
-      avatar: '/assets/avatars/avatar-anika-visser.png',
-      name: 'Anika Visser',
-      email: 'anika.visser@devias.io'
-    };
+  //   const user = {
+  //     id: '5e86809283e28b96d2d38537',
+  //     avatar: '/assets/avatars/avatar-anika-visser.png',
+  //     name: 'Anika Visser',
+  //     email: 'anika.visser@devias.io'
+  //   };
 
-    dispatch({
-      type: HANDLERS.SIGN_IN,
-      payload: user
-    });
-  };
+  //   dispatch({
+  //     type: HANDLERS.SIGN_IN,
+  //     payload: user
+  //   });
+  // };
 
   const signIn = async (email, password) => {
     try{
@@ -126,6 +133,8 @@ export const AuthProvider = (props) => {
     if (typeof window !== "undefined") {
       localStorage.setItem('token', token);
       localStorage.setItem('user', JSON.stringify(user)); // Almacena los datos del usuario como una cadena JSON
+      setToken(token);
+      setCurrentUser(user);
       dispatch({
         type: HANDLERS.SIGN_IN,
         payload: user
@@ -151,7 +160,6 @@ export const AuthProvider = (props) => {
   if (typeof window !== "undefined") {
     localStorage.setItem('token', token); // Almacena el token en localStorage
     localStorage.setItem('user', JSON.stringify(user)); // Almacena los datos del usuario en localStorage
-    window.sessionStorage.setItem('authenticated', 'true'); // Marca la sesión como autenticada
   }
 
   dispatch({
@@ -165,6 +173,8 @@ export const AuthProvider = (props) => {
   };
 
   const signOut = () => {
+    setCurrentUser(null);
+    setToken("");
     dispatch({
       type: HANDLERS.SIGN_OUT
     });
@@ -172,13 +182,13 @@ export const AuthProvider = (props) => {
   if (typeof window !== "undefined") {
   localStorage.removeItem('token');
   localStorage.removeItem('user');
-  window.sessionStorage.setItem('authenticated', 'false');
   }
   return (
     <AuthContext.Provider
       value={{
         ...state,
-        skip,
+        currentUser,
+        token,
         signIn,
         signUp,
         signOut
