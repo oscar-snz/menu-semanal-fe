@@ -37,8 +37,8 @@ export const SettingsPassword = () => {
     <form onSubmit={handleSubmit}>
       <Card>
         <CardHeader
-          subheader="Update password"
-          title="Password"
+          subheader="Cambiar contraseña"
+          title="Contraseña"
         />
         <Divider />
         <CardContent>
@@ -67,7 +67,7 @@ export const SettingsPassword = () => {
         <Divider />
         <CardActions sx={{ justifyContent: 'flex-end' }}>
           <Button variant="contained">
-            Update
+            Cambiar contraseña
           </Button>
         </CardActions>
       </Card>
