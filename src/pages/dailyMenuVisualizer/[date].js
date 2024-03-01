@@ -2,12 +2,13 @@ import React, { useContext } from 'react';
 import Head from 'next/head';
 import { Typography } from '@mui/material';
 import { Layout as DashboardLayout } from 'src/layouts/dashboard/layout';
-import { useAuth } from 'src/hooks/use-auth';
 import DailyMenuSlider from 'src/sections/overview/daily-menu-slider'; // Asegúrate de ajustar la ruta de importación correctamente
+import { useRouter } from 'next/router';
 
 
-const Page = () => {
-  const { user } = useAuth();
+const MenuVisualizerPage = () => {
+  const router = useRouter();
+  const { date } = router.query;
 
   return (
     <>
@@ -24,15 +25,14 @@ const Page = () => {
     textAlign: 'right' // alinea el texto a la derecha
   }}
 >
-  Bienvenido {user?.name}, este es tu menú de hoy:
 </Typography>
-      <DailyMenuSlider />
+      <DailyMenuSlider selectedDate={date}/>
     </>
   );
 };
 
-Page.getLayout = (page) => (
+MenuVisualizerPage.getLayout = (page) => (
   <DashboardLayout>{page}</DashboardLayout>
 );
 
-export default Page;
+export default MenuVisualizerPage;

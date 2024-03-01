@@ -18,7 +18,6 @@ const config = {
 };
   const fetchInventoryItems = async () => {
     try {
-      console.log("Se entro al fetch de inventario");
       const response = await axios.get('http://localhost:3001/api/inventario', config);
       setInventoryItems(response.data);
     } catch (error) {
