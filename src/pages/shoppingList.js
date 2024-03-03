@@ -21,6 +21,20 @@ const ShoppingListPage = () => {
     fetchShoppingList();
   }, [currentWeek]);
 
+  const pluralizeWord = (word, quantity) => {
+    const lastChar = word[word.length - 1].toLowerCase();
+    const vowels = ['a', 'e', 'i', 'o', 'u'];
+  
+    if (quantity >= 2) {
+      if (vowels.includes(lastChar)) {
+        return word + 's';
+      } else {
+        return word + 'es';
+      }
+    }
+    return word;
+  };
+  
   const checkWeeklyMenuExists = async () => {
     const weekStart = format(currentWeek, 'yyyy-MM-dd');
     try {
@@ -100,7 +114,7 @@ const ShoppingListPage = () => {
     }}>
       {shoppingList.items.map((item) => (
         <ListItem key={item._id}>
-          <ListItemText primary={`${item.quantity} ${item.measure} ${item.food}`} />
+          <ListItemText primary={`${item.quantity} ${pluralizeWord(item.measure, item.quantity)} ${item.food}`} />
         </ListItem>
       ))}
     </List>
