@@ -89,22 +89,33 @@ const ShoppingListPage = () => {
         <Button onClick={handleNextWeek}>Siguiente</Button>
       </Box>
       {shoppingList ? (
-        <Box>
-          <Typography>Lista de compras para esta semana:</Typography>
-          <List>
-            {shoppingList.items.map((item) => (
-              <ListItem key={item._id}>
-                <ListItemText primary={`${item.food}: ${item.quantity} ${item.measure}`} />
-              </ListItem>
-            ))}
-          </List>
-          <Button onClick={handleCreateOrUpdateList}>Actualizar lista de compras</Button>
-        </Box>
-      ) : weeklyMenuExists ? (
-        <Button onClick={handleCreateOrUpdateList}>Crear lista de compras</Button>
-      ) : (
-        <Typography>No hay un menú semanal creado para esta semana.</Typography>
-      )}
+  <Box>
+    <Typography variant="h6" sx={{ mb: 2 }}>Lista de compras para esta semana:</Typography>
+    <List sx={{
+      listStyleType: 'disc', // Aplica marcadores de disco a los elementos de la lista
+      marginLeft: '20px', // Ajusta según sea necesario para alinear los elementos de la lista
+      '& .MuiListItem-root': { // Aplica estilos a los elementos de la lista
+        display: 'list-item'
+      }
+    }}>
+      {shoppingList.items.map((item) => (
+        <ListItem key={item._id}>
+          <ListItemText primary={`${item.quantity} ${item.measure} ${item.food}`} />
+        </ListItem>
+      ))}
+    </List>
+    <Button variant="contained" color="primary" onClick={handleCreateOrUpdateList} sx={{ mt: 2 }}>
+      Actualizar lista de compras
+    </Button>
+  </Box>
+) : weeklyMenuExists ? (
+  <Button variant="contained" color="primary" onClick={handleCreateOrUpdateList}>
+    Crear lista de compras
+  </Button>
+) : (
+  <Typography>No hay un menú semanal creado para esta semana.</Typography>
+)}
+
     </Box>
   );
 };
