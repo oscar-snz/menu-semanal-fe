@@ -68,6 +68,7 @@ const ShoppingListPage = () => {
   // Paso 2 y 3: Comprobar artículo en inventario y generar mensaje
   const checkItemInInventory = (item) => {
     let message = '';
+    let component = null;
     const threshold = 0.8; // Umbral para considerar una coincidencia
     let hasMatch = false; // Para rastrear si encontramos alguna coincidencia
     
@@ -79,16 +80,20 @@ const ShoppingListPage = () => {
         const itemMeasurePluralized = pluralizeWord(item.measure, item.quantity);
         const inventoryMeasurePluralized = pluralizeWord(inventoryItem.unidad.nombre, inventoryItem.cantidad);
         
-        if (item.measure === inventoryItem.unidad.nombre && item.quantity <= inventoryItem.cantidad) {
+        if (item.measure.toLowerCase() === inventoryItem.unidad.nombre.toLowerCase() && item.quantity <= inventoryItem.cantidad) {
           // Caso: Tienes suficiente en inventario
           message = `Tienes suficiente ${inventoryItem.nombreAlimento}, tienes ${inventoryItem.cantidad} ${inventoryMeasurePluralized} en tu inventario.`;
-        } else {
+        } else if (item.measure.toLowerCase() === inventoryItem.unidad.nombre.toLowerCase() && item.quantity > inventoryItem.cantidad) {
           // Caso: Necesitas más pero tienes algo en inventario
-          message = `Necesitas ${item.quantity} ${itemMeasurePluralized} de ${item.food}, pero tienes ${inventoryItem.cantidad} ${inventoryMeasurePluralized} en tu inventario.`;
+          const quantityNeeded = item.quantity - inventoryItem.cantidad;
+          message = `Tienes ${inventoryItem.cantidad} ${inventoryMeasurePluralized} de ${item.food} en tu inventario. Necesitas comprar ${quantityNeeded} ${itemMeasurePluralized} adicionales.`;
+        } else {
+          message = `Tienes ${item.food} en tu inventario, solo que en unidad distinta.`
         }
       }
     });
     
+     
     return message;
   };
   
