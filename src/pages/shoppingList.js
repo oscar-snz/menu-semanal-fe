@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import axios from 'axios';
+import axios from '../utils/axiosWithInterceptor';
 import { format, startOfWeek, endOfWeek, addWeeks, subWeeks } from 'date-fns';
 import { es } from 'date-fns/locale';
 import { Button, Typography, Box, Paper, List, ListItem, ListItemText } from '@mui/material';
@@ -67,7 +67,6 @@ const ShoppingListPage = () => {
   
   // Paso 2 y 3: Comprobar artículo en inventario y generar mensaje
   const checkItemInInventory = (item) => {
-    let message = '';
     let component = null;
     const threshold = 0.8; // Umbral para considerar una coincidencia
     let hasMatch = false; // Para rastrear si encontramos alguna coincidencia
@@ -81,20 +80,18 @@ const ShoppingListPage = () => {
         const inventoryMeasurePluralized = pluralizeWord(inventoryItem.unidad.nombre, inventoryItem.cantidad);
         
         if (item.measure.toLowerCase() === inventoryItem.unidad.nombre.toLowerCase() && item.quantity <= inventoryItem.cantidad) {
-          // Caso: Tienes suficiente en inventario
-          message = `Tienes suficiente ${inventoryItem.nombreAlimento}, tienes ${inventoryItem.cantidad} ${inventoryMeasurePluralized} en tu inventario.`;
+          component = <Typography style={{ color: 'green' }}>Tienes suficiente {inventoryItem.nombreAlimento}, tienes {inventoryItem.cantidad} {inventoryMeasurePluralized} en tu inventario.</Typography>;
         } else if (item.measure.toLowerCase() === inventoryItem.unidad.nombre.toLowerCase() && item.quantity > inventoryItem.cantidad) {
-          // Caso: Necesitas más pero tienes algo en inventario
           const quantityNeeded = item.quantity - inventoryItem.cantidad;
-          message = `Tienes ${inventoryItem.cantidad} ${inventoryMeasurePluralized} de ${item.food} en tu inventario. Necesitas comprar ${quantityNeeded} ${itemMeasurePluralized} adicionales.`;
+          component = <Typography style={{ color: 'red' }}>Tienes {inventoryItem.cantidad} {inventoryMeasurePluralized} de {item.food} en tu inventario. Necesitas comprar {quantityNeeded} {itemMeasurePluralized} adicionales.</Typography>;
         } else {
-          message = `Tienes ${item.food} en tu inventario, solo que en unidad distinta.`
+          component = <Typography style={{ color: 'orange' }}>Tienes {item.food} en tu inventario, solo que en unidad distinta.</Typography>;
         }
       }
     });
     
      
-    return message;
+    return component;
   };
   
   

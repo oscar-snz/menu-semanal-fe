@@ -5,8 +5,10 @@ import { Box, Container, Typography, Button } from '@mui/material';
 import { Layout as DashboardLayout } from 'src/layouts/dashboard/layout';
 import InventoryList from 'src/sections/inventory/inventoryList';
 import AddInventoryItem from 'src/sections/inventory/addInventoryItem';
+import useSubscriptionCheck from 'src/hooks/useSubscriptionCheck'; 
 
 const StockPage = () => {
+  useSubscriptionCheck();
   return (
     <>
       <Head>

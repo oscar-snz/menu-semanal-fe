@@ -1,14 +1,15 @@
-import React, { useContext } from 'react';
+import React, { useEffect, useState } from 'react';
 import Head from 'next/head';
 import { Typography } from '@mui/material';
 import { Layout as DashboardLayout } from 'src/layouts/dashboard/layout';
 import { useAuth } from 'src/hooks/use-auth';
 import DailyMenuSlider from 'src/sections/overview/daily-menu-slider'; // Asegúrate de ajustar la ruta de importación correctamente
-
+import useSubscriptionCheck from 'src/hooks/useSubscriptionCheck'; 
 
 const Page = () => {
   const { user } = useAuth();
-
+  useSubscriptionCheck(); 
+  
   return (
     <>
       <Head>

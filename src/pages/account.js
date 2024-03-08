@@ -3,8 +3,11 @@ import { Box, Container, Stack, Typography, Unstable_Grid2 as Grid } from '@mui/
 import { Layout as DashboardLayout } from 'src/layouts/dashboard/layout';
 import { AccountProfile } from 'src/sections/account/account-profile';
 import { AccountProfileDetails } from 'src/sections/account/account-profile-details';
+import useSubscriptionCheck from 'src/hooks/useSubscriptionCheck'; 
 
-const Page = () => (
+const Page = () => {
+  useSubscriptionCheck(); 
+  return(
   <>
     <Head>
       <title>
@@ -50,7 +53,7 @@ const Page = () => (
       </Container>
     </Box>
   </>
-);
+)};
 
 Page.getLayout = (page) => (
   <DashboardLayout>

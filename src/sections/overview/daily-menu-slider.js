@@ -3,7 +3,7 @@ import { Typography, Box, Button, Paper } from '@mui/material';
 import Slider from 'react-slick';
 import 'slick-carousel/slick/slick.css';
 import 'slick-carousel/slick/slick-theme.css';
-import axios from 'axios';
+import axios from '../../utils/axiosWithInterceptor';
 import { useAuth } from 'src/hooks/use-auth';
 import { useRouter } from 'next/router';
 import { format } from 'date-fns';

@@ -3,8 +3,11 @@ import { Box, Container, Stack, Typography } from '@mui/material';
 import { DietAndHealth } from 'src/sections/settings/diet-and-health';
 import { SettingsPassword } from 'src/sections/settings/settings-password';
 import { Layout as DashboardLayout } from 'src/layouts/dashboard/layout';
+import useSubscriptionCheck from 'src/hooks/useSubscriptionCheck'; 
 
-const Page = () => (
+const Page = () => {
+  useSubscriptionCheck();
+  return(
   <>
     <Head>
       <title>
@@ -32,7 +35,7 @@ const Page = () => (
       </Container>
     </Box>
   </>
-);
+)};
 
 Page.getLayout = (page) => (
   <DashboardLayout>

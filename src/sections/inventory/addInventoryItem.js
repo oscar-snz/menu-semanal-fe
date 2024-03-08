@@ -2,7 +2,7 @@ import React, { useEffect } from 'react';
 import { Button, Box, Select, MenuItem, FormControl, InputLabel, TextField } from '@mui/material';
 import { useFormik } from 'formik';
 import * as Yup from 'yup';
-import axios from 'axios';
+import axios from '../../utils/axiosWithInterceptor';
 import { useAuth } from 'src/hooks/use-auth';
 
 

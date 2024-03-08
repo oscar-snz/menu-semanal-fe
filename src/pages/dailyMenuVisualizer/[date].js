@@ -4,9 +4,11 @@ import { Typography } from '@mui/material';
 import { Layout as DashboardLayout } from 'src/layouts/dashboard/layout';
 import DailyMenuSlider from 'src/sections/overview/daily-menu-slider'; // Asegúrate de ajustar la ruta de importación correctamente
 import { useRouter } from 'next/router';
+import useSubscriptionCheck from 'src/hooks/useSubscriptionCheck'; 
 
 
 const MenuVisualizerPage = () => {
+  useSubscriptionCheck();
   const router = useRouter();
   const { date } = router.query;
 

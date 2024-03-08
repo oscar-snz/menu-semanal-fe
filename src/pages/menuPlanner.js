@@ -1,42 +1,44 @@
 import React, { useState, useEffect } from 'react';
-import axios from 'axios';
+import axios from '../utils/axiosWithInterceptor';
 import { format, startOfWeek, endOfWeek, addWeeks, subWeeks, addDays, startOfDay } from 'date-fns';
 import { es } from 'date-fns/locale';
 import { Layout as DashboardLayout } from 'src/layouts/dashboard/layout';
 import Head from 'next/head';
 import { Button, Typography, Box, Paper } from '@mui/material';
+import CircularProgress from '@mui/material/CircularProgress';
 import { useAuth } from 'src/hooks/use-auth';
 import { useRouter } from 'next/router';
+import useSubscriptionCheck from 'src/hooks/useSubscriptionCheck'; 
 
 
 
 const MenuPlanner = () => {
+  useSubscriptionCheck();
   const router = useRouter();
   const [currentWeek, setCurrentWeek] = useState(startOfWeek(new Date(), { weekStartsOn: 1 }));
   const [weeklyMenu, setWeeklyMenu] = useState(null);
   const { token } = useAuth();
   const config = { headers: { 'Authorization': `Bearer ${token}` } };
+  const [creatingMenu, setCreatingMenu] = useState(null); 
 
   function parseDate(dateString) {
-    const [datePart] = dateString.split('T'); // Extrae solo la parte de la fecha
-    const [year, month, day] = datePart.split('-').map(Number); // Convierte a números
-    return { year, month, day }; // Devuelve un objeto con las partes
+    const [datePart] = dateString.split('T'); 
+    const [year, month, day] = datePart.split('-').map(Number); 
+    return { year, month, day }; 
   }
 
 
-  const handleCreateMenu = async (date) => {
-    const payload = { date: format(date, 'yyyy-MM-dd') };
+  const handleCreateMenu = async (dayIdentifier) => {
+    setCreatingMenu(dayIdentifier);
+    const payload = { date: dayIdentifier };
 
     try {
-      const response = await axios.post('http://localhost:3001/api/weekly-menu', payload, config);
-
-      // Aquí puedes manejar la respuesta. Por ejemplo, podrías mostrar un mensaje de éxito.
-      console.log(response.data);
-      alert('¡Menú creado con éxito!');
+      await axios.post('http://localhost:3001/api/weekly-menu', payload, config);
+      setCreatingMenu(null);
       fetchWeeklyMenu();
     } catch (error) {
-      console.error('Error al crear el menú:', error);
-      // Aquí puedes manejar el error. Por ejemplo, mostrar un mensaje de error.
+      console.error('Error al crear el menu: ', error) ;
+      setCreatingMenu(null); 
       alert('Error al crear el menú.');
     }
   };
@@ -68,7 +70,6 @@ const MenuPlanner = () => {
   const handleNextWeek = () => {
     setCurrentWeek(addWeeks(currentWeek, 1));
   };
-
   return (
     <Box>
       <Box display="flex" justifyContent="space-between" alignItems="center" p={2}>
@@ -81,6 +82,7 @@ const MenuPlanner = () => {
       <Box>
         {Array.from({ length: 7 }).map((_, index) => {
           const day = startOfDay(addDays(startOfWeek(currentWeek, { weekStartsOn: 1 }), index));
+          const dayIdentifier = format(day, 'yyyy-MM-dd');
           const dailyMenu = weeklyMenu?.dailyMenus.find(menu => {
             const menuDateParts = parseDate(menu.date);
             const dayParts = parseDate(day.toISOString());
@@ -93,8 +95,10 @@ const MenuPlanner = () => {
               <Typography variant="h6">{format(day, 'PPPP', { locale: es })}</Typography>
               <Box display="flex" justifyContent="space-between">
                 {!dailyMenu && (
-                  <Button onClick={() => handleCreateMenu(day)}>Crear menú para esta fecha</Button>
-                )}
+                  <Button onClick={() => handleCreateMenu(dayIdentifier)}>
+             {creatingMenu === dayIdentifier ? <CircularProgress size={24} /> : 'Crear menú para esta fecha'} 
+             </Button>
+                )} 
                 {dailyMenu && (
                   <Button onClick={() => handleViewRecipe(day)}>Visualizar receta</Button>
                 )}

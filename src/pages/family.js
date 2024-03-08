@@ -6,11 +6,13 @@ import { Layout as DashboardLayout } from 'src/layouts/dashboard/layout';
 import AddFamilyMember from 'src/sections/family/addFamilyMember'; // Asegúrate de que la ruta sea correcta y el nombre del import inicie con mayúscula
 import FamilyMemberList from 'src/sections/family/familyMemberList';
 import { useAuth } from 'src/hooks/use-auth';
-import axios from 'axios';
+import axios from '../utils/axiosWithInterceptor';
+import useSubscriptionCheck from 'src/hooks/useSubscriptionCheck'; 
 
 
 
 const FamilyPage = () => {
+  useSubscriptionCheck(); 
   const [familyMembers, setFamilyMembers] = useState([]);
   const [wantsToAddFamilyMembers, setWantsToAddFamilyMembers] = useState(true);
   const { token } = useAuth();

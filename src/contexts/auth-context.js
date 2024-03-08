@@ -77,25 +77,25 @@ export const AuthProvider = (props) => {
     if (typeof window !== "undefined") {
       const storedToken = localStorage.getItem('token');
       const storedUser = localStorage.getItem('user');
+      // Asegúrate de cargar y parsear la información de suscripción
       const user = storedUser ? JSON.parse(storedUser) : null;
-
+  
       if (user && storedToken) {
         setCurrentUser(user);
         setToken(storedToken);
         dispatch({ type: HANDLERS.INITIALIZE, payload: user });
-        // window.sessionStorage.setItem('authenticated', 'true'); // Considera si esto es necesario
       } else {
         dispatch({ type: HANDLERS.INITIALIZE });
       }
     }
   };
-   
+
 
 
   useEffect(
     () => {
       initialize();
-    },
+   },
     // eslint-disable-next-line react-hooks/exhaustive-deps
     []
   );
@@ -121,32 +121,31 @@ export const AuthProvider = (props) => {
   // };
 
   const signIn = async (email, password) => {
-    try{
-    const response = await axios.post('http://localhost:3001/api/auth/login', {
-      email,
-      password,
-    }, {
-      withCredentials: true
-    }
-    );
-    const {user, token} = response.data;
-    if (typeof window !== "undefined") {
-      localStorage.setItem('token', token);
-      localStorage.setItem('user', JSON.stringify(user)); // Almacena los datos del usuario como una cadena JSON
-      setToken(token);
-      setCurrentUser(user);
-      dispatch({
-        type: HANDLERS.SIGN_IN,
-        payload: user
+    try {
+      const response = await axios.post('http://localhost:3001/api/auth/login', {
+        email,
+        password,
+      }, {
+        withCredentials: true
       });
-      }   
-  
-  }catch(err){
-    console.error('Error en signIn: ', err);
-    console.error(err);
-    throw err;
-  };
-}
+
+      const { user, token } = response.data;
+      
+      if (typeof window !== "undefined") {
+        localStorage.setItem('token', token);
+        localStorage.setItem('user', JSON.stringify({ ...user}));
+        setToken(token);
+        setCurrentUser({ ...user });
+        dispatch({
+          type: HANDLERS.SIGN_IN,
+          payload: { ...user }
+        });
+      }
+    } catch(err) {
+      console.error('Error en signIn:', err);
+      throw err;
+    };
+  }
 
   const signUp = async (name, email, password) => {
     try {
@@ -206,3 +205,5 @@ AuthProvider.propTypes = {
 export const AuthConsumer = AuthContext.Consumer;
 
 export const useAuthContext = () => useContext(AuthContext);
+
+export default useSubscriptionCheck;

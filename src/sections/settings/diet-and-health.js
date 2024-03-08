@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { FormControl, InputLabel, Select, MenuItem, FormControlLabel, Checkbox, Button, Grid, Typography } from '@mui/material';
-import axios from 'axios';
+import axios from '../../utils/axiosWithInterceptor';
 import { useAuth } from 'src/hooks/use-auth';
 import { dietOptions, healthOptions } from '../../../constants/preferences'; // Asegúrate de que la ruta sea correcta
 

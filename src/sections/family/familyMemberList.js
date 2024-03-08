@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { Typography, List, ListItem, ListItemText, ListItemSecondaryAction, IconButton } from '@mui/material';
 import DeleteIcon from '@mui/icons-material/Delete';
-import axios from 'axios';
+import axios from '../../utils/axiosWithInterceptor';
 import { useAuth } from 'src/hooks/use-auth'; // Asegúrate de importar correctamente tu hook de autenticación
 import AddFamilyMember from './addFamilyMember';
 
