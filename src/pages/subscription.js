@@ -1,8 +1,9 @@
 import React, { useEffect, useState } from 'react';
-import { Button, Typography, Box } from '@mui/material';
-import CreditCardForm from '../components/CreditCardForm';
+import { Button, Typography, Box, List, ListItem, ListItemText, ListItemIcon, Paper } from '@mui/material';
+import CheckCircleOutlineIcon from '@mui/icons-material/CheckCircleOutline';
 import axios from 'axios';
 import { useAuth } from 'src/hooks/use-auth';
+import { useRouter } from 'next/router';
 
 const SubscriptionLandingPage = () => {
   const [subscriptionStatus, setSubscriptionStatus] = useState({
@@ -13,10 +14,9 @@ const SubscriptionLandingPage = () => {
   });
   const { token } = useAuth();
   const config = { headers: { Authorization: `Bearer ${token}` } };
+  const router = useRouter();
 
-  
   useEffect(() => {
-    // Simula una función que consulta el estado de la suscripción
     const fetchSubscriptionStatus = async () => {
       try {
         const response = await axios.get('http://localhost:3001/api/users/user-data', config);
@@ -29,38 +29,62 @@ const SubscriptionLandingPage = () => {
     fetchSubscriptionStatus();
   }, []);
 
-  const handleSubscriptionSubmit = async (cardDetails) => {
-    console.log('Detalles de la tarjeta:', cardDetails);
-    // Determina si debemos iniciar un periodo de prueba o una suscripción basado en el estado actual
-    try {
-      if (!subscriptionStatus.isSubscribed && !subscriptionStatus.hasUsedTrial) {
-        // Inicia el periodo de prueba
-        await axios.post('http://localhost:3001/api/users/start-trial', config);
-        alert('Tu periodo de prueba ha comenzado!');
-      } else {
-        // Inicia una suscripción
-        await axios.post('http://localhost:3001/api/users/start-subscription', config, { cardDetails });
-        alert('Tu suscripción ha sido activada!');
-      }
-    } catch (error) {
-      console.error('Error handling subscription:', error);
-      alert('Ocurrió un error al procesar tu suscripción.');
-    }
+  const handleSubscriptionSubmit = async () => {
+    router.push("/payment")
   };
 
   return (
-    <Box sx={{ padding: '20px', display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
-      <Typography variant="h4" gutterBottom>
-        ¡Bienvenido a MasterMenu Premium!
+    <Paper elevation={3} sx={{ maxWidth: 600, mx: 'auto', p: 4, mt: 8 }}>
+      <Typography variant="h4" gutterBottom textAlign="center">
+      ¡Bienvenido a MasterMenu Premium!
       </Typography>
-      <Typography paragraph>
-        Con MasterMenu Premium, obtendrás acceso completo a recetas exclusivas, planificación de comidas personalizada, y mucho más.
-      </Typography>
-      <Typography paragraph>
-        ¡Disfruta de 30 días de prueba gratuita ingresando tu tarjeta de crédito!
-      </Typography>
-      <CreditCardForm onSubmit={handleSubscriptionSubmit} />
-    </Box>
+      {subscriptionStatus.hasUsedTrial ? (
+        <>
+          <Typography paragraph textAlign="center">
+            Para continuar usando nuestros servicios y disfrutar de todas nuestras características premium, se requiere una suscripción.
+          </Typography>
+          <Box display="flex" justifyContent="center">
+            <Button variant="contained" color="primary" onClick={handleSubscriptionSubmit}>
+              Suscribirse Ahora
+            </Button>
+          </Box>
+        </>
+      ) : (
+        <>
+          <Typography paragraph textAlign="center">
+            Con MasterMenu Premium, obtendrás acceso completo a:
+          </Typography>
+      <List>
+        <ListItem>
+          <ListItemIcon>
+            <CheckCircleOutlineIcon color="primary" />
+          </ListItemIcon>
+          <ListItemText primary="Recetas exclusivas" />
+        </ListItem>
+        <ListItem>
+          <ListItemIcon>
+            <CheckCircleOutlineIcon color="primary" />
+          </ListItemIcon>
+          <ListItemText primary="Planificación de comidas semanales para ti y tu familia" />
+        </ListItem>
+        <ListItem>
+          <ListItemIcon>
+            <CheckCircleOutlineIcon color="primary" />
+          </ListItemIcon>
+          <ListItemText primary="No compres de más! Nuestra lista de compras se crea de acuerdo a tu inventario existente." />
+        </ListItem>
+      </List>
+      <Typography paragraph textAlign="center">
+            ¡Disfruta de 30 días de prueba gratuita ingresando tu tarjeta de crédito!
+          </Typography>
+          <Box display="flex" justifyContent="center">
+            <Button variant="contained" color="primary" onClick={handleSubscriptionSubmit}>
+              Comenzar Prueba Gratis
+            </Button>
+          </Box>
+          </>
+      )}
+    </Paper>
   );
 };
 

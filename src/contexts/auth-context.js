@@ -159,6 +159,8 @@ export const AuthProvider = (props) => {
   if (typeof window !== "undefined") {
     localStorage.setItem('token', token); // Almacena el token en localStorage
     localStorage.setItem('user', JSON.stringify(user)); // Almacena los datos del usuario en localStorage
+    setToken(token);
+    setCurrentUser({ ...user });
   }
 
   dispatch({
