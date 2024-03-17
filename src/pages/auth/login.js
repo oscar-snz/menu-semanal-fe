@@ -102,7 +102,7 @@ const Page = () => {
                 alignItems: 'center'
               }}
             >
-  <Typography variant="h4" sx={{ mt: 4, mb: 4 }}> 
+              <Typography variant="h4" sx={{ mt: 4, mb: 4 }}>
                 Inicio de Sesion
               </Typography>
               <Typography
@@ -118,6 +118,22 @@ const Page = () => {
                   variant="subtitle2"
                 >
                   Registro
+                </Link>
+              </Typography>
+              <Typography
+                color="text.secondary"
+                variant="body2"
+                sx={{ mt: 2 }} // Ajusta el margen superior según sea necesario
+              >
+                ¿Olvidaste tu contraseña?
+                &nbsp;
+                <Link
+                  component={NextLink}
+                  href="/auth/reset-password"
+                  underline="hover"
+                  variant="subtitle2"
+                >
+                  Recuperar contraseña
                 </Link>
               </Typography>
             </Stack>
