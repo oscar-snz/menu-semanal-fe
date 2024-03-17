@@ -2,7 +2,6 @@ import NextLink from 'next/link';
 import { usePathname } from 'next/navigation';
 import PropTypes from 'prop-types';
 import FaviconImage from '../../components/Favicon';
-import LogoSvg  from '../../assets/logo.svg';
 
 import {
   Box,
@@ -42,11 +41,11 @@ export const SideNav = (props) => {
               display: 'flex',
               justifyContent: 'space-between',
               mt: 2,
-              p: '12px'
+              p: '24px'
             }}
           >
             <Box sx={{ display: 'flex', alignItems: 'center' }}>
-            <LogoSvg width="32px" height="32px" />
+            <FaviconImage width="64px" height="64px" />
       <Typography
         color="inherit"
         variant="subtitle1" 

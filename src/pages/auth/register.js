@@ -1,7 +1,7 @@
 import Head from 'next/head';
 import NextLink from 'next/link';
 import { useRouter } from 'next/navigation';
-import { useFormik} from 'formik';
+import { useFormik } from 'formik';
 import * as Yup from 'yup';
 import { Button, TextField, Snackbar, Alert, Typography, Box, Stack, Link } from '@mui/material';
 import { useAuth } from 'src/hooks/use-auth';
@@ -24,9 +24,9 @@ const Page = () => {
     },
     validationSchema: Yup.object({
       name: Yup
-      .string()
-      .max(50, 'El nombre no puede exeder los 50 caracteres')
-      .required('El nombre es requerido'),
+        .string()
+        .max(50, 'El nombre no puede exeder los 50 caracteres')
+        .required('El nombre es requerido'),
       email: Yup
         .string()
         .email('Debe ser un correo válido')
@@ -37,12 +37,12 @@ const Page = () => {
         .min(6, 'La contraseña debe tener al menos 6 caracteres')
         .max(255)
         .required('La contraseña es requerida'),
-        confirmPassword: Yup
+      confirmPassword: Yup
         .string()
         .oneOf([Yup.ref('password'), null], 'Las contraseñas deben coincidir')
         .required('La confirmación de contraseña es requerida'),
     }),
-    onSubmit: async (values, {setSubmitting, setErrors}) => {
+    onSubmit: async (values, { setSubmitting, setErrors }) => {
       try {
         await signUp(values.name, values.email, values.password);
         setRegistrationSuccess(true); // Simula un registro exitoso
@@ -72,7 +72,16 @@ const Page = () => {
         </Alert>
       </Snackbar>
       <Box
-      
+        sx={{
+          display: 'flex',
+          justifyContent: 'center',
+          mt: 14 
+        }}
+      >
+        <img src="/schedule-logo.png" alt="Schedule Logo" style={{ maxWidth: '100px', maxHeight: '100%' }} />
+      </Box>
+      <Box
+
         sx={{
           flex: '1 1 auto',
           alignItems: 'center',
@@ -100,7 +109,7 @@ const Page = () => {
                 color="text.secondary"
                 variant="body2"
               >
-                Already have an account?
+                ¿Ya tienes una cuenta?
                 &nbsp;
                 <Link
                   component={NextLink}
@@ -108,11 +117,11 @@ const Page = () => {
                   underline="hover"
                   variant="subtitle2"
                 >
-                  Log in
+                  Iniciar Sesion
                 </Link>
               </Typography>
             </Stack>
-             
+
             <form
               noValidate
               onSubmit={formik.handleSubmit}
@@ -122,7 +131,7 @@ const Page = () => {
                   error={!!(formik.touched.name && formik.errors.name)}
                   fullWidth
                   helperText={formik.touched.name && formik.errors.name}
-                  label="Name"
+                  label="Nombre"
                   name="name"
                   onBlur={formik.handleBlur}
                   onChange={formik.handleChange}
@@ -132,7 +141,7 @@ const Page = () => {
                   error={!!(formik.touched.email && formik.errors.email)}
                   fullWidth
                   helperText={formik.touched.email && formik.errors.email}
-                  label="Email Address"
+                  label="Correo Electronico"
                   name="email"
                   onBlur={formik.handleBlur}
                   onChange={formik.handleChange}
@@ -143,7 +152,7 @@ const Page = () => {
                   error={!!(formik.touched.password && formik.errors.password)}
                   fullWidth
                   helperText={formik.touched.password && formik.errors.password}
-                  label="Password"
+                  label="Contraseña"
                   name="password"
                   onBlur={formik.handleBlur}
                   onChange={formik.handleChange}
@@ -152,17 +161,17 @@ const Page = () => {
                   autoComplete='current-password'
                 />
                 <TextField
-                error={!!(formik.touched.confirmPassword && formik.errors.confirmPassword)}
-                fullWidth
-                helperText={formik.touched.confirmPassword && formik.errors.confirmPassword}
-                label="Confirmar contraseña"
-                name="confirmPassword"
-                onBlur={formik.handleBlur}
-                onChange={formik.handleChange}
-                type="password"
-                value={formik.values.confirmPassword}
-                autoComplete="new-password"
-              />
+                  error={!!(formik.touched.confirmPassword && formik.errors.confirmPassword)}
+                  fullWidth
+                  helperText={formik.touched.confirmPassword && formik.errors.confirmPassword}
+                  label="Confirmar contraseña"
+                  name="confirmPassword"
+                  onBlur={formik.handleBlur}
+                  onChange={formik.handleChange}
+                  type="password"
+                  value={formik.values.confirmPassword}
+                  autoComplete="new-password"
+                />
               </Stack>
               {formik.errors.submit && (
                 <Typography
@@ -174,21 +183,21 @@ const Page = () => {
                 </Typography>
               )}
               <Button
-              fullWidth
-              size="large"
-              sx={{ mt: 3 }}
-              type="submit"
-              variant="contained"
-              disabled={!formik.isValid || formik.isSubmitting}
-            >
-              Registrar
-            </Button>
+                fullWidth
+                size="large"
+                sx={{ mt: 3 }}
+                type="submit"
+                variant="contained"
+                disabled={!formik.isValid || formik.isSubmitting}
+              >
+                Registrar
+              </Button>
             </form>
-              
-    
-            
+
+
+
           </div>
-          
+
         </Box>
       </Box>
     </>
